@@ -1,98 +1,282 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import * as NavigationBar from 'expo-navigation-bar';
+import { router } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { useEffect, useState } from 'react';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import Navbar from '../../components/Navbar';
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+export default function App() {
+  const [umore, setUmore] = useState<string | null>(null);
+  const [confermaUmore, setConfermaUmore] = useState('');
+  const [bottoni, setBottoni] = useState(true);
 
-export default function HomeScreen() {
+  useEffect(() => {
+    NavigationBar.setVisibilityAsync('hidden');
+  }, []);
+
+  const moods = [
+    { nome: 'sunny', label: 'Felice', color: 'orange' },
+    { nome: 'flash', label: 'Agitato', color: 'yellow' },
+    { nome: 'leaf', label: 'Calmo', color: 'green' },
+    { nome: 'rainy', label: 'Triste', color: '#ad4a70' },
+  ];
+
+  function handleMoodPress(nome: string) {
+    setUmore((prev) => (prev === nome ? null : nome));
+    setConfermaUmore('');
+  }
+
+  function handleConferma() {
+    if (!umore) return;
+    setConfermaUmore('Si');
+    setBottoni(false);
+  }
+
+  function handleAnnulla() {
+    setUmore(null);
+    setConfermaUmore('No');
+  }
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+    <>
+      <StatusBar hidden />
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+      <View style={styles.container}>
+        <Navbar />
+
+        <Image
+          source={require('../../assets/images/home_copertina.jpg')}
+          style={styles.img}
+        />
+
+        <Text style={styles.text2}>Cosa vuoi fare oggi?</Text>
+
+        <View style={styles.grid}>
+          
+            <View style={styles.box1}>
+              <TouchableOpacity onPress={() => router.push('/pensiero')}>
+              <Image
+                source={require('../../assets/images/pensiero.jpg')}
+                style={styles.img1}
+              />
+              <View style={styles.overlay} />
+              <Text style={styles.text1}>Pensiero</Text>
+              </TouchableOpacity>
+            </View>
+          
+          <View style={styles.box1}>
+            <Image
+              source={require('../../assets/images/meditazione.jpg')}
+              style={styles.img1}
+            />
+            <View style={styles.overlay} />
+            <Text style={styles.text1}>Meditazione</Text>
+          </View>
+
+          <View style={styles.box1}>
+            <Image
+              source={require('../../assets/images/sedute.jpg')}
+              style={styles.img1}
+            />
+            <View style={styles.overlay} />
+            <Text style={styles.text1}>Appuntamenti</Text>
+          </View>
+
+          <View style={styles.box1}>
+            <Image
+              source={require('../../assets/images/obiettivi.jpg')}
+              style={styles.img1}
+            />
+            <View style={styles.overlay} />
+            <Text style={styles.text1}>Obiettivi</Text>
+          </View>
+        </View>
+
+
+        {confermaUmore === 'Si' ? (
+          <><Text style={styles.feedbackText}>
+            Oggi ti senti {moods.find((m) => m.nome === umore)?.label}
+          </Text>
+            <TouchableOpacity>
+              <Text style={
+                {
+                  marginTop: 10,
+                  textDecorationLine: 'underline',
+                  color: '#6eb347'
+                }
+              }>Consulta il calendario dell'umore</Text>
+            </TouchableOpacity>
+          </>
+        ) :
+          (<><Text style={styles.text3}>Seleziona il tuo stato d'animo..</Text><View style={styles.umore}>
+            {moods.map((item) => (
+              <View key={item.nome} style={styles.divumore}>
+                <TouchableOpacity onPress={() => handleMoodPress(item.nome)}>
+                  <Ionicons
+                    name={item.nome as any}
+                    size={28}
+                    color={umore === item.nome ? item.color : 'white'} />
+                </TouchableOpacity>
+                <Text style={styles.text_humor}>{item.label}</Text>
+              </View>
+            ))}
+          </View></>
+          )}
+
+
+        {umore && bottoni && (
+
+          <View style={styles.actions}>
+            <TouchableOpacity onPress={handleConferma}>
+              <Text style={styles.confirmButton}>Conferma</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={handleAnnulla}>
+              <Text style={styles.cancelButton}>Annulla</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
+
+
+        {confermaUmore === 'No' && (
+          <Text style={styles.feedbackText}>Selezione annullata</Text>
+        )}
+      </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  container: {
+    flex: 1,
+    backgroundColor: '#102664',
+    paddingTop: 0,
     alignItems: 'center',
-    gap: 8,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+
+  img: {
+    width: '100%',
+    height: 200,
+    resizeMode: 'cover',
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
+
+  text2: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 20,
+    width: '90%',
+    textAlign: 'center'
+  },
+
+  text3: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 20,
+    textDecorationLine: 'underline'
+  },
+
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    width: '90%',
+    marginTop: 20,
+  },
+
+  box1: {
+    width: '48%',
+    height: 140,
+    borderRadius: 20,
+    overflow: 'hidden',
+    position: 'relative',
+    marginBottom: 15,
+  },
+
+  img1: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.10)',
+  },
+
+  text1: {
+    position: 'absolute',
     bottom: 0,
     left: 0,
-    position: 'absolute',
+    right: 0,
+    color: 'white',
+    fontSize: 15,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    backgroundColor: '#61a8c9',
+    padding: 5,
+  },
+
+  umore: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    marginTop: 20,
+    paddingHorizontal: 20,
+  },
+
+  divumore: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  text_humor: {
+    textAlign: 'center',
+    fontSize: 15,
+    color: 'white',
+    fontWeight: 'bold',
+    marginTop: 10,
+  },
+
+  actions: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 25,
+  },
+
+  confirmButton: {
+    color: '#1c7754',
+    fontWeight: 'bold',
+    backgroundColor: '#68c587',
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    marginRight: 10,
+  },
+
+  cancelButton: {
+    color: '#751450',
+    fontWeight: 'bold',
+    backgroundColor: '#e480b2',
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+  },
+
+  feedbackText: {
+    marginTop: 16,
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
