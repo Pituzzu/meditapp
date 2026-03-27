@@ -55,7 +55,7 @@ export default function Pratiche() {
                     <Text style={styles.text}>Inizia la tua pratica</Text>
                     <Text style={styles.text1}>Mindfulness</Text>
                     <TouchableOpacity onPress={() => setMeditazioneStart(true)}>
-                        <Text style={styles.text2}>Avvia la tua sessione</Text>
+                        <Text style={styles.text2}>Avvia la tua sessione!</Text>
                     </TouchableOpacity>
                 </View>
             ) : (
