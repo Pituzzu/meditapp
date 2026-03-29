@@ -84,10 +84,10 @@ export default function Pratiche() {
                                 color='white' 
                             />
                         </TouchableOpacity>
-                        
-                        <TouchableOpacity>
+                        {play ? (<TouchableOpacity>
                             <Ionicons name="save-outline" size={40} color='white' />
-                        </TouchableOpacity>
+                        </TouchableOpacity>):''}
+                        
                     </View>
 
                     <View style={styles.lista_mindfulness}>
